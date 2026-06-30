@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Platform User Testing Worksheet</title>
+  <style>
+    :root {
+      --primary: #4B1869;
+      --primary-light: #7a3d9a;
+      --accent: #6B6B6B;
+      --pale: #f4f4f6;
+      --grey-mid: #9E9E9E;
+      --grey-dark: #4A4A4A;
+      --border: #ccc;
+      --text: #222;
+      --muted: #555;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      color: var(--text);
+      background: #fff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Header ── */
+    .header {
+      border-bottom: 4px solid var(--primary);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+    .header-text h1 {
+      font-family: Arial, sans-serif;
+      font-size: 22px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .header-text p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #fff;
+      background: var(--primary);
+      padding: 5px 10px;
+      margin: 22px 0 10px;
+      border-radius: 3px;
+    }
+
+    /* ── Form grid ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+    }
+    .form-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+    .form-grid.full { grid-template-columns: 1fr; }
+    .field { display: flex; flex-direction: column; gap: 3px; }
+    .field.span-2 { grid-column: span 2; }
+    .field label {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .field input[type="text"],
+    .field input[type="date"],
+    .field select,
+    .field textarea {
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: #fafafa;
+      width: 100%;
+      resize: vertical;
+    }
+    .field input[type="text"]:focus,
+    .field input[type="date"]:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: 2px solid var(--grey-mid);
+      background: #fff;
+    }
+    .field textarea { min-height: 60px; }
+    .field textarea.tall { min-height: 80px; }
+
+    /* ── Role radio buttons ── */
+    .role-group {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .role-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .role-group input[type="radio"] { accent-color: var(--primary); }
+
+    /* ── Task table ── */
+    .task-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+    .task-table th {
+      background: var(--pale);
+      color: var(--primary);
+      font-weight: 700;
+      padding: 7px 8px;
+      border: 1px solid var(--border);
+      text-align: left;
+      font-size: 11px;
+    }
+    .task-table td {
+      border: 1px solid var(--border);
+      padding: 5px 8px;
+      vertical-align: top;
+    }
+    .task-table tr:nth-child(even) td { background: #f9f9f9; }
+    .task-table td input[type="text"],
+    .task-table td select,
+    .task-table td textarea {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 2px;
+      padding: 3px 5px;
+      font-size: 11px;
+      font-family: Arial, sans-serif;
+      background: transparent;
+      resize: vertical;
+    }
+    .task-table td textarea { min-height: 44px; }
+    .task-table td input[type="text"]:focus,
+    .task-table td select:focus,
+    .task-table td textarea:focus {
+      outline: 2px solid var(--grey-mid);
+      background: #fff;
+    }
+    .task-num {
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      width: 28px;
+    }
+
+    /* ── Rating scale ── */
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 6px 0;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+    .rating-row .rating-label { width: 220px; flex-shrink: 0; color: var(--text); }
+    .rating-options { display: flex; gap: 10px; }
+    .rating-options label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 10px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .rating-options input[type="radio"] { accent-color: var(--primary); }
+    .rating-scale-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      font-family: Arial, sans-serif;
+    }
+    .rating-scale-header .rating-label { width: 220px; }
+    .rating-scale-header .scale-nums {
+      display: flex;
+      gap: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .scale-num-item { width: 28px; text-align: center; }
+
+    /* ── Satisfaction bar ── */
+    .sat-bar {
+      display: flex;
+      gap: 0;
+      margin-top: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .sat-bar label {
+      flex: 1;
+      text-align: center;
+      padding: 7px 2px;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      cursor: pointer;
+      border-right: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .sat-bar label:last-child { border-right: none; }
+    .sat-bar input[type="radio"] { display: none; }
+    .sat-bar input[type="radio"]:checked + span { font-weight: 700; }
+    .sat-bar label:has(input:checked) { background: var(--primary); color: #fff; }
+    .sat-bar label:not(:has(input:checked)):hover { background: var(--pale); }
+    .sat-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 3px;
+      padding: 0 2px;
+    }
+
+    /* ── Checkbox list ── */
+    .check-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px 20px;
+      margin-top: 6px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+    .check-list label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .check-list input[type="checkbox"] {
+      accent-color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 18px 0;
+    }
+
+    /* ── Info box ── */
+    .info-box {
+      background: var(--pale);
+      border-left: 4px solid var(--grey-mid);
+      padding: 8px 12px;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: var(--muted);
+      border-radius: 0 3px 3px 0;
+      margin-bottom: 10px;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    button {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 22px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s;
+    }
+    button:hover { opacity: 0.85; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-secondary { background: var(--grey-dark); color: #fff; }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 36px;
+      border-top: 2px solid var(--grey-mid);
+      padding-top: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    @media print {
+      .btn-row { display: none; }
+      body { font-size: 11px; }
+      .page { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-text">
+      <h1>AI Platform — End User Testing Worksheet</h1>
+      <p>University of St. Thomas Minnesota &nbsp;|&nbsp; Office of Information Technology</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    Complete one worksheet per testing session. All feedback is confidential and used solely to improve the platform experience for the St. Thomas community.
+  </div>
+
+  <!-- ── SECTION 1: Participant Info ── -->
+  <div class="section-title">1 &nbsp; Participant Information</div>
+  <div class="form-grid">
+    <div class="field">
+      <label>First Name</label>
+      <input type="text" placeholder="First name" />
+    </div>
+    <div class="field">
+      <label>Last Name</label>
+      <input type="text" placeholder="Last name" />
+    </div>
+    <div class="field">
+      <label>St. Thomas Email</label>
+      <input type="text" placeholder="username@stthomas.edu" />
+    </div>
+    <div class="field">
+      <label>Department / School / College</label>
+      <input type="text" placeholder="e.g., School of Engineering, Registrar's Office" />
+    </div>
+    <div class="field span-2">
+      <label>Role at St. Thomas</label>
+      <div class="role-group">
+        <label><input type="radio" name="role" value="faculty" /> Faculty</label>
+        <label><input type="radio" name="role" value="staff" /> Staff</label>
+        <label><input type="radio" name="role" value="undergrad" /> Undergraduate Student</label>
+        <label><input type="radio" name="role" value="grad" /> Graduate Student</label>
+        <label><input type="radio" name="role" value="other" /> Other</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: Session Info ── -->
+  <div class="section-title">2 &nbsp; Testing Session Details</div>
+  <div class="form-grid three-col">
+    <div class="field">
+      <label>Session Date</label>
+      <input type="date" />
+    </div>
+    <div class="field">
+      <label>Session Start Time</label>
+      <input type="text" placeholder="e.g., 10:00 AM" />
+    </div>
+    <div class="field">
+      <label>Session End Time</label>
+      <input type="text" placeholder="e.g., 10:45 AM" />
+    </div>
+    <div class="field">
+      <label>Testing Mode</label>
+      <select>
+        <option value="">— Select —</option>
+        <option>In-Person (Facilitated)</option>
+        <option>Remote (Facilitated)</option>
+        <option>Self-Guided / Unmoderated</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Platform / Version Tested</label>
+      <input type="text" placeholder="e.g., Aquinas AI v1.2" />
+    </div>
+    <div class="field">
+      <label>Facilitator Name (if applicable)</label>
+      <input type="text" placeholder="Facilitator's name" />
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 3: Prior Experience ── -->
+  <div class="section-title">3 &nbsp; Prior AI Experience</div>
+  <div class="form-grid">
+    <div class="field">
+      <label>How often do you currently use AI tools?</label>
+      <select>
+        <option value="">— Select —</option>
+        <option>Daily</option>
+        <option>A few times per week</option>
+        <option>A few times per month</option>
+        <option>Rarely</option>
+        <option>Never — this is my first time</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Which AI tools have you used before? (check all that apply)</label>
+      <div class="check-list">
+        <label><input type="checkbox" /> ChatGPT</label>
+        <label><input type="checkbox" /> Microsoft Copilot</label>
+        <label><input type="checkbox" /> Google Gemini</label>
+        <label><input type="checkbox" /> Claude (Anthropic)</label>
+        <label><input type="checkbox" /> Grammarly / writing tools</label>
+        <label><input type="checkbox" /> Other / None</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: Task Testing ── -->
+  <div class="section-title">4 &nbsp; Task Testing Log</div>
+  <p style="font-family:Arial,sans-serif;font-size:11px;color:var(--muted);margin-bottom:8px;">
+    Record each task attempted during the session. Rate task completion and note any observations.
+  </p>
+
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th style="width:28px;">#</th>
+        <th style="width:20%;">Task Description</th>
+        <th style="width:14%;">Completion Status</th>
+        <th style="width:10%;">Time on Task</th>
+        <th style="width:12%;">Ease of Use<br/><span style="font-weight:400;font-size:10px;">(1=Hard, 5=Easy)</span></th>
+        <th>Observations / Issues Encountered</th>
+      </tr>
+    </thead>
+    <tbody id="task-body"></tbody>
+  </table>
+  <div style="margin-top:8px;text-align:right;">
+    <button class="btn-outline" onclick="addTaskRow()" style="font-size:11px;padding:5px 14px;">+ Add Task Row</button>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 5: Usability Ratings ── -->
+  <div class="section-title">5 &nbsp; Usability Ratings</div>
+  <p style="font-family:Arial,sans-serif;font-size:11px;color:var(--muted);margin-bottom:10px;">
+    Rate each dimension on a scale of <strong>1 (Strongly Disagree)</strong> to <strong>5 (Strongly Agree)</strong>.
+  </p>
+
+  <div class="rating-scale-header">
+    <div class="rating-label"></div>
+    <div class="scale-nums">
+      <div class="scale-num-item">1</div>
+      <div class="scale-num-item">2</div>
+      <div class="scale-num-item">3</div>
+      <div class="scale-num-item">4</div>
+      <div class="scale-num-item">5</div>
+    </div>
+  </div>
+
+  <div id="ratings-container"></div>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 6: Overall Satisfaction ── -->
+  <div class="section-title">6 &nbsp; Overall Satisfaction</div>
+  <p style="font-family:Arial,sans-serif;font-size:11px;color:var(--muted);margin-bottom:6px;">
+    How satisfied are you with the AI platform overall?
+  </p>
+  <div class="sat-bar" id="sat-bar"></div>
+  <div class="sat-labels">
+    <span>Very Dissatisfied</span>
+    <span>Very Satisfied</span>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 7: Open-Ended Feedback ── -->
+  <div class="section-title">7 &nbsp; Open-Ended Feedback</div>
+  <div class="form-grid full" style="gap:12px;">
+    <div class="field">
+      <label>What did you find most useful or valuable about the platform?</label>
+      <textarea class="tall" placeholder="Describe what worked well…"></textarea>
+    </div>
+    <div class="field">
+      <label>What was most confusing, frustrating, or difficult to use?</label>
+      <textarea class="tall" placeholder="Describe pain points or barriers…"></textarea>
+    </div>
+    <div class="field">
+      <label>What features or improvements would you most like to see?</label>
+      <textarea class="tall" placeholder="Suggestions, missing features, enhancements…"></textarea>
+    </div>
+    <div class="field">
+      <label>Any additional comments or concerns?</label>
+      <textarea placeholder="Other thoughts…"></textarea>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 8: Follow-Up ── -->
+  <div class="section-title">8 &nbsp; Follow-Up Consent</div>
+  <div class="form-grid">
+    <div class="field span-2">
+      <label>May we contact you for follow-up questions about your feedback?</label>
+      <div class="role-group" style="margin-top:6px;">
+        <label><input type="radio" name="followup" value="yes" /> Yes — please reach out</label>
+        <label><input type="radio" name="followup" value="no" /> No — anonymous feedback only</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Preferred Contact Method (if yes)</label>
+      <select>
+        <option value="">— Select —</option>
+        <option>Email (St. Thomas address on file)</option>
+        <option>Microsoft Teams</option>
+        <option>Phone</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Best Time to Reach You (if yes)</label>
+      <input type="text" placeholder="e.g., Weekday mornings" />
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="btn-row">
+    <button class="btn-outline" onclick="clearForm()">Clear Form</button>
+    <button class="btn-secondary" onclick="window.print()">🖨 Print / Save PDF</button>
+    <button class="btn-primary" onclick="submitForm()">Submit Feedback ✓</button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>University of St. Thomas Minnesota &nbsp;|&nbsp; stthomas.edu</span>
+    <span>AI Platform User Testing Worksheet &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; Office of Information Technology</span>
+  </div>
+
+</div>
+
+<script>
+  const taskDescriptions = [
+    "Ask the AI a course-related question",
+    "Request a document summary or analysis",
+    "Use the AI to draft or edit written content",
+    "Search for a campus resource or policy",
+    "Perform a multi-step or complex query",
+  ];
+
+  function buildTaskRow(n, desc) {
+    return `
+      <tr>
+        <td class="task-num">${n}</td>
+        <td><input type="text" value="${desc}" /></td>
+        <td>
+          <select>
+            <option value="">— Select —</option>
+            <option>✅ Completed</option>
+            <option>⚠️ Partial</option>
+            <option>❌ Not Completed</option>
+            <option>⏭ Skipped</option>
+          </select>
+        </td>
+        <td><input type="text" placeholder="min:sec" /></td>
+        <td>
+          <select>
+            <option value="">—</option>
+            <option>1 – Very Hard</option>
+            <option>2 – Hard</option>
+            <option>3 – Neutral</option>
+            <option>4 – Easy</option>
+            <option>5 – Very Easy</option>
+          </select>
+        </td>
+        <td><textarea placeholder="Notes, errors, confusion points…"></textarea></td>
+      </tr>`;
+  }
+
+  const tbody = document.getElementById('task-body');
+  taskDescriptions.forEach((d, i) => {
+    tbody.insertAdjacentHTML('beforeend', buildTaskRow(i + 1, d));
+  });
+
+  let taskCount = taskDescriptions.length;
+  function addTaskRow() {
+    taskCount++;
+    tbody.insertAdjacentHTML('beforeend', buildTaskRow(taskCount, ''));
+  }
+
+  const ratingItems = [
+    "The platform was easy to navigate",
+    "Responses were accurate and relevant",
+    "The platform responded quickly",
+    "The interface was visually clear and readable",
+    "I felt confident using the platform",
+    "The platform respected my privacy and data",
+    "The platform would be useful in my daily work/study",
+    "I would recommend this platform to a colleague",
+  ];
+
+  const rc = document.getElementById('ratings-container');
+  ratingItems.forEach((item, i) => {
+    const name = `rating_${i}`;
+    let opts = '';
+    for (let v = 1; v <= 5; v++) {
+      opts += `<label><input type="radio" name="${name}" value="${v}" /><span>${v}</span></label>`;
+    }
+    rc.insertAdjacentHTML('beforeend', `
+      <div class="rating-row">
+        <div class="rating-label">${item}</div>
+        <div class="rating-options">${opts}</div>
+      </div>`);
+  });
+
+  const satLabels = ['1','2','3','4','5','6','7','8','9','10'];
+  const satBar = document.getElementById('sat-bar');
+  satLabels.forEach((lbl, i) => {
+    satBar.insertAdjacentHTML('beforeend', `
+      <label>
+        <input type="radio" name="satisfaction" value="${i + 1}" />
+        <span>${lbl}</span>
+      </label>`);
+  });
+
+  function clearForm() {
+    if (confirm('Clear all form data? This cannot be undone.')) {
+      document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(el => el.value = '');
+      document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+      document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => el.checked = false);
+    }
+  }
+
+  function submitForm() {
+    alert('Thank you for your feedback!\n\nIn a live deployment, your responses would be securely submitted to the St. Thomas IT team.');
+  }
+</script>
+</body>
+</html>
